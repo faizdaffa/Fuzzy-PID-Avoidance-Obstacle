@@ -17,11 +17,11 @@ const char* KD = "inputKD";
 float yourInputKP = 0;
 float yourInputKI = 0;
 float yourInputKD = 0;
-
+float baca_yaw;
 
 String read_dataZ()
 {
-  return String(mpu.getAngleZ());
+  return String(baca_yaw);
 }
 
 void notFound(AsyncWebServerRequest* request) {
