@@ -2,7 +2,8 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include "webserver.h"
+// #include "webserver.h"
+#include <MPU6050_light.h>
 #include "ultrasonik.h"
 // #include "motor.h"
 #include "fuzzy.h"
@@ -11,14 +12,21 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
+MPU6050 mpu(Wire);
+float yourInputKP = 1;
+float yourInputKI = 0;
+float yourInputKD = 0;
+float baca_yaw;
+
 unsigned long currentMillis;
-const unsigned long interval1 = 0;
+const unsigned long interval1 = 1;
 const unsigned long interval2 = 10;
-const unsigned long interval3 = 1000;
+const unsigned long interval3 = 3000;
 unsigned long prevMillis1 = 0;
 unsigned long prevMillis2 = 0;
 unsigned long prevMillis3 = 0;
 unsigned long prevMillis4 = 0;
+int motorState = 0;
 
 int setpoint = 0, resultModus = 0, previousModus = 0;
 const int N_SAMPLES = 100;
@@ -45,7 +53,18 @@ void setup()
   display.setTextColor(SSD1306_WHITE);  // Draw white text
   display.clearDisplay();
   display.println(F("Calculating gyro offset, do not move MPU6050"));
-  webserver_innit();
+
+  Wire.begin();
+  byte status = mpu.begin();
+  Serial.print(F("MPU6050 status: "));
+  Serial.println(status);
+  while(status!=0){ } // stop everything if could not connect to MPU6050
+  Serial.println(F("Calculating offsets, do not move MPU6050"));
+  delay(1000);
+  mpu.calcOffsets(true, true); // gyro and accelero
+  Serial.println("Done!\n");
+
+  // webserver_innit();
   delay(2000);
   display.display();
 }
@@ -117,7 +136,7 @@ void loop()
     }
 
     //=========PID=========
-    read_input();  //input KP, KI, KD webserver
+    // read_input();  //input KP, KI, KD webserver
     // z = mpu.getAngleZ();
     pid(baca_yaw, setpoint, yourInputKP, yourInputKI, yourInputKD);
     
@@ -185,7 +204,7 @@ void rotasi(float setSudut, float bacaZ)
   if (pwm > 0) 
   {
     // Serial.println("slow down!");
-    for (int i = pwm; i >= 20; i--)
+    for (int i = pwm; i >= 0; i--)
     {
       if (currentMillis - prevMillis3 >= interval3)
       {
@@ -200,12 +219,11 @@ void rotasi(float setSudut, float bacaZ)
       }
     }
   }
-
-  if ((millis() - prevMillis4) >= 1000) 
+  if (pwm == 0)
   {
-    prevMillis4 = millis();
     stop();
   }
+  
   // delay(1000);
   if (error > 0) 
   {

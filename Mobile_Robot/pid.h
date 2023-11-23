@@ -10,9 +10,9 @@ int pwmB;
 int pwmKa;
 int pwmKi;
 int Upper = 80;
-int Lower = 30;
-int basePWM = 50;
-int pwm = 30;
+int Lower = 25;
+int basePWM = 40;
+int pwm = 20;
 
 float error, integralE, derivativeE, lastError;
 float PID;
@@ -90,20 +90,20 @@ void putar_kanan()
 {
     digitalWrite(M1A, HIGH);
     digitalWrite(M1B, LOW);
-    analogWrite(M1E, pwm);
+    analogWrite(M1E, 25);
     digitalWrite(M2A, LOW);
     digitalWrite(M2B, HIGH);
-    analogWrite(M2E, pwm);
+    analogWrite(M2E, 20);
 }
 
 void putar_kiri()
 {
     digitalWrite(M1A, LOW);
     digitalWrite(M1B, HIGH);
-    analogWrite(M1E, pwm);
+    analogWrite(M1E, 25);
     digitalWrite(M2A, HIGH);
     digitalWrite(M2B, LOW);
-    analogWrite(M2E, pwm);
+    analogWrite(M2E, 20);
 }
 
 void stop()
