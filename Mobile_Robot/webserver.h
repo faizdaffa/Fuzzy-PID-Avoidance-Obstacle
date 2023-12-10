@@ -14,11 +14,6 @@ const char* KP = "inputKP";
 const char* KI = "inputKI";
 const char* KD = "inputKD";
 
-float yourInputKP = 0;
-float yourInputKI = 0;
-float yourInputKD = 0;
-float baca_yaw;
-
 String read_dataZ()
 {
   return String(baca_yaw);

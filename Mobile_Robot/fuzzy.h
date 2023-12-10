@@ -90,15 +90,15 @@ void depan_sedang(int ultrasonikDepan)
 
 void depan_dekat(int ultrasonikDepan)
 {
-  if (ultrasonikDepan < 10) 
+  if (ultrasonikDepan < 5) 
   {
     fuzzy_depan_dekat = 1;
   }
-  if (ultrasonikDepan >= 10 && ultrasonikDepan <= 20) 
+  if (ultrasonikDepan >= 5 && ultrasonikDepan <= 15) 
   {
-    fuzzy_depan_dekat = ((20.0 - ultrasonikDepan) / (20.0 - 10.0));
+    fuzzy_depan_dekat = ((15.0 - ultrasonikDepan) / (15.0 - 5.0));
   }
-  if (ultrasonikDepan > 20) 
+  if (ultrasonikDepan > 15) 
   {
     fuzzy_depan_dekat = 0;
   }

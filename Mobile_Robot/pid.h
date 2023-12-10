@@ -9,14 +9,13 @@ int pwmA;
 int pwmB;
 int pwmKa;
 int pwmKi;
-int Upper = 80;
-int Lower = 25;
+int Upper = 50;
+int Lower = 0;
 int basePWM = 40;
 int pwm = 20;
 
 float error, integralE, derivativeE, lastError;
-float PID;
-double dt;
+float PID, dt;
 unsigned long now, prevTime;
 
 void motor_innit() 
@@ -29,7 +28,7 @@ void motor_innit()
   pinMode(M2E, OUTPUT);
 }
 
-void pid(float yaw, int sp, int kp, int ki, int kd) 
+void pid(float yaw, float sp, int kp, int ki, int kd) 
 {
   digitalWrite(M1A, HIGH);
   digitalWrite(M1B, LOW);
@@ -37,10 +36,12 @@ void pid(float yaw, int sp, int kp, int ki, int kd)
   digitalWrite(M2B, LOW);
 
   now = millis();
-  dt  = now - prevTime;
+  dt  = (now - prevTime) / 1000;
   error = sp - yaw;
-  integralE = integralE + error;
-  derivativeE = error - lastError;
+  integralE = (integralE + error) * dt;
+  derivativeE = (error - lastError);
+  prevTime  = now;
+  lastError = error;
   
   float P = kp * error;
   float I = ki * integralE;
@@ -60,10 +61,7 @@ void pid(float yaw, int sp, int kp, int ki, int kd)
 
   analogWrite(M1E, pwmKa);
   analogWrite(M2E, pwmKi);
-
-  lastError = error;
-  prevTime  = now;
-  // Serial.println(String(error) + "\t" + String(PID) + "\t" + String(pwmKi) + "\t" + String(pwmKa));
+  // Serial.println(String(error) + "\t" + String(P) + "\t" + String(I) + "\t" + String(D) + "\t" + String(dt) + "\t" + String(PID) + "\t" + String(pwmKi) + "\t" + String(pwmKa));
 }
 
 void maju()

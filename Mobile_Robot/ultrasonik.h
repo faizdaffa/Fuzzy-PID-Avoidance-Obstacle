@@ -31,6 +31,7 @@ int Depan = 0;
 int Kanan = 0;
 int KananDepan = 0;
 int KananBelakang = 0;
+float distance1, distance2, distance3, distance4, distance5, d_left, d_right;
 
 void read_ultrasonik()
 {
@@ -55,4 +56,44 @@ void read_ultrasonik()
 
   Kiri  = (KiriDepan  +  KiriBelakang) / 2;
   Kanan = (KananDepan + KananBelakang) / 2;
+}
+void manual_innit()
+{ 
+  pinMode(TRIGGER_1, OUTPUT);
+  pinMode(ECHO_1, INPUT);
+  pinMode(TRIGGER_2, OUTPUT);
+  pinMode(ECHO_2, INPUT);
+  pinMode(TRIGGER_3, OUTPUT);
+  pinMode(ECHO_3, INPUT);
+  pinMode(TRIGGER_4, OUTPUT);
+  pinMode(ECHO_4, INPUT);
+  pinMode(TRIGGER_5, OUTPUT);
+  pinMode(ECHO_5, INPUT);
+}
+
+float measureDistance(int triggerPin, int echoPin) 
+{
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distance = duration * 0.034 / 2;  // Convert to centimeters
+
+  return distance;
+}
+
+void manual_ultrasonic()
+{
+  distance1 = measureDistance(TRIGGER_1, ECHO_1);
+  distance2 = measureDistance(TRIGGER_2, ECHO_2);
+  distance3 = measureDistance(TRIGGER_3, ECHO_3);
+  distance4 = measureDistance(TRIGGER_4, ECHO_4);
+  distance5 = measureDistance(TRIGGER_5, ECHO_5);
+  d_left    = abs(distance1 - distance2);
+  d_right   = abs(distance4 - distance5);
+  // Serial.print(f"Distance 1: {} cm", distance1);
+  // Serial.println(f"Distance 2: {} cm", distance2);
 }
