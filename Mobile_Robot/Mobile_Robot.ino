@@ -14,8 +14,8 @@
 
 MPU6050 mpu(Wire);
 float yourInputKP = 4.8;
-float yourInputKI = 120.00000000000014;
-float yourInputKD = 0.04799999999999994;
+float yourInputKI = 10.6;
+float yourInputKD = 2.2;
 float baca_yaw;
 
 unsigned long currentMillis;
