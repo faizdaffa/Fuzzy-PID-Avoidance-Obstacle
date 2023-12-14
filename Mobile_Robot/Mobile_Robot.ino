@@ -69,119 +69,115 @@ void setup()
   // webserver_innit();
   // delay(2000);
   display.display();
-
   // Serial.println(String(i) + ". " + left + " " + front + " " + right + " = " + String(resultModus) + " ==> " + String(collectDataLeft) + "\t" + String(collectDataStraight) + "\t" + String(collectDataRight));
-  for (int i = 0; i <= 200; i++)
-  {
-    mpu.update();
-    currentMillis = millis();
-    if (currentMillis - prevMillis1 >= 1) 
-    {
-      prevMillis1 = currentMillis;
-      baca_yaw = mpu.getAngleZ();;
-      // Serial.print(String(baca_yaw) + "   ");
-
-      display.clearDisplay();
-      //read distance ultrasonic
-      // manual_ultrasonic();
-      //========FUZZY========
-      read_ultrasonik();
-      fuzzification(Kiri, Depan, Kanan);
-      
-      for (int i = 0; i < N_SAMPLES; i++)
-      {
-        String defuzzification = ruleBase(left, front, right);
-        modus[i] = inferFuzzy(defuzzification);
-      }
-      int dataSize = sizeof(modus) / sizeof(modus[0]); // Calculate the array size
-
-      // Serial.print("Modus: ");
-      // Serial.println(resultModus);    
-      
-      previousModus = resultModus;
-      resultModus = findMode(modus, dataSize);
-
-      if (previousModus != resultModus) 
-      {
-        // Mengganti keputusan
-        // Serial.print("BEDA\t");
-        if (takeData)
-        {
-          // Serial.print("UPDATE");
-          if (resultModus == 90)
-          {
-            setpoint += 90;
-            rotasi(setpoint, baca_yaw);
-            // collectDataLeft += 1;
-          }
-          else if (resultModus == -90)
-          {
-            setpoint -= 90;
-            rotasi(setpoint, baca_yaw);
-            // collectDataRight += 1;
-          }
-          // else
-          // {
-          //   collectDataStraight += 1;
-          // }
-          // Serial.println(takeData);
-          // gerak pid
-          takeData = false;
-        }
-      }
-      else
-      {
-        takeData = true;
-      }
-
-      //=========PID=========
-      // read_input();  //input KP, KI, KD webserver
-      // z = mpu.getAngleZ();
-      pid(baca_yaw, setpoint, yourInputKP, yourInputKI, yourInputKD);
-      
-      
-      // Serial.println(String(setpoint) + ";" + String(baca_yaw));
-      // Serial.println(d_left);
-      Serial.print(setpoint);
-      Serial.print(F(","));
-      Serial.println(baca_yaw);
-      // Serial.print("  ||  Z = ");
-      // Serial.println(mpu.getAngleZ());
-
-      display.clearDisplay();
-      display.setTextSize(1);
-      display.setTextColor(WHITE);
-      display.setCursor(0, 0);
-      display.print("Z:" + String(baca_yaw));
-
-      //OLED Ultrasonik
-      display.setCursor(0, 20);
-      display.print("L:" + String(Kiri));
-      display.setCursor(0, 36);
-      display.print("F:" + String(Depan));
-      display.setCursor(0, 56);
-      display.print("R:" + String(Kanan));
-      //OLED MPU6050
-      display.setCursor(70, 0);
-      display.print("SP:" + String(setpoint));
-      //PID Setting
-      display.setCursor(70, 20);
-      display.print("KP:" + String(yourInputKP));
-      display.setCursor(70, 36);
-      display.print("KI:" + String(yourInputKI));
-      display.setCursor(70, 56);
-      display.print("KD:" + String(yourInputKD));
-      // display.print("SP:" + String(setpoint));
-      display.display();
-      // Serial.println(left + " " + front + " " + right + " = " + String(setpoint));
-
-      // Serial.println(String(mpu.getAngleZ()) + "\t" + String(kalman_mpu6050));
-    }
-  }
-  stop();
 }
+
 void loop() 
 {
+  mpu.update();
+  currentMillis = millis();
+  if (currentMillis - prevMillis1 >= 1) 
+  {
+    prevMillis1 = currentMillis;
+    baca_yaw = mpu.getAngleZ();;
+    // Serial.print(String(baca_yaw) + "   ");
+
+    display.clearDisplay();
+    //read distance ultrasonic
+    // manual_ultrasonic();
+    //========FUZZY========
+    read_ultrasonik();
+    fuzzification(Kiri, Depan, Kanan);
+    
+    for (int i = 0; i < N_SAMPLES; i++)
+    {
+      String defuzzification = ruleBase(left, front, right);
+      modus[i] = inferFuzzy(defuzzification);
+    }
+    int dataSize = sizeof(modus) / sizeof(modus[0]); // Calculate the array size
+
+    // Serial.print("Modus: ");
+    // Serial.println(resultModus);    
+    
+    previousModus = resultModus;
+    resultModus = findMode(modus, dataSize);
+
+    if (previousModus != resultModus) 
+    {
+      // Mengganti keputusan
+      // Serial.print("BEDA\t");
+      if (takeData)
+      {
+        // Serial.print("UPDATE");
+        if (resultModus == 90)
+        {
+          setpoint += 90;
+          rotasi(setpoint, baca_yaw);
+          // collectDataLeft += 1;
+        }
+        else if (resultModus == -90)
+        {
+          setpoint -= 90;
+          rotasi(setpoint, baca_yaw);
+          // collectDataRight += 1;
+        }
+        // else
+        // {
+        //   collectDataStraight += 1;
+        // }
+        // Serial.println(takeData);
+        // gerak pid
+        takeData = false;
+      }
+    }
+    else
+    {
+      takeData = true;
+    }
+
+    //=========PID=========
+    // read_input();  //input KP, KI, KD webserver
+    // z = mpu.getAngleZ();
+    pid(baca_yaw, setpoint, yourInputKP, yourInputKI, yourInputKD);
+    
+    
+    // Serial.println(String(setpoint) + ";" + String(baca_yaw));
+    // Serial.println(d_left);
+    Serial.print(setpoint);
+    Serial.print(F(","));
+    Serial.println(baca_yaw);
+    // Serial.print("  ||  Z = ");
+    // Serial.println(mpu.getAngleZ());
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    display.print("Z:" + String(baca_yaw));
+
+    //OLED Ultrasonik
+    display.setCursor(0, 20);
+    display.print("L:" + String(Kiri));
+    display.setCursor(0, 36);
+    display.print("F:" + String(Depan));
+    display.setCursor(0, 56);
+    display.print("R:" + String(Kanan));
+    //OLED MPU6050
+    display.setCursor(70, 0);
+    display.print("SP:" + String(setpoint));
+    //PID Setting
+    display.setCursor(70, 20);
+    display.print("KP:" + String(yourInputKP));
+    display.setCursor(70, 36);
+    display.print("KI:" + String(yourInputKI));
+    display.setCursor(70, 56);
+    display.print("KD:" + String(yourInputKD));
+    // display.print("SP:" + String(setpoint));
+    display.display();
+    // Serial.println(left + " " + front + " " + right + " = " + String(setpoint));
+
+    // Serial.println(String(mpu.getAngleZ()) + "\t" + String(kalman_mpu6050));
+  }
 }
 
 int findMode(int arr[], int size) 
