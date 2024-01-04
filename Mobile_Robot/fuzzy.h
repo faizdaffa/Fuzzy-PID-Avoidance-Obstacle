@@ -90,15 +90,16 @@ void depan_sedang(int ultrasonikDepan)
 
 void depan_dekat(int ultrasonikDepan)
 {
-  if (ultrasonikDepan < 5) 
+  if (ultrasonikDepan < 10) 
   {
     fuzzy_depan_dekat = 1;
   }
-  if (ultrasonikDepan >= 5 && ultrasonikDepan <= 15) 
+  if (ultrasonikDepan >= 10 && ultrasonikDepan <= 20) 
   {
-    fuzzy_depan_dekat = ((15.0 - ultrasonikDepan) / (15.0 - 5.0));
+    // fuzzy_depan_dekat = ((20.0 - ultrasonikDepan) / (20.0 - 10.0));
+    fuzzy_depan_dekat = 0;
   }
-  if (ultrasonikDepan > 15) 
+  if (ultrasonikDepan > 20) 
   {
     fuzzy_depan_dekat = 0;
   }
@@ -110,15 +111,15 @@ void kanan_jauh(int ultrasonikKanan)
   //jauh
   if (ultrasonikKanan < 20) 
   {
-    fuzzy_kanan_dekat = 0;
+    fuzzy_kanan_jauh = 0;
   }
   if (ultrasonikKanan >= 20 && ultrasonikKanan <= 30) 
   {
-    fuzzy_kanan_dekat = ((ultrasonikKanan - 20.0) / (30.0 - 20.0));
+    fuzzy_kanan_jauh = ((ultrasonikKanan - 20.0) / (30.0 - 20.0));
   }
   if (ultrasonikKanan > 30) 
   {
-    fuzzy_kanan_dekat = 1;
+    fuzzy_kanan_jauh = 1;
   }
 }
 
@@ -160,11 +161,19 @@ String DekatSedangJauh(float a, float b, float c)
 {
   float max = a;
   String data = "dekat";
-  if (b > max) 
+  if (a > b && a > c)
+  {
+    data = "dekat";
+  }
+  else if (b > max) 
   {
     data = "sedang";
   }
-  if (c > b) 
+  else if (c > b) 
+  {
+    data = "jauh";
+  }
+  else
   {
     data = "jauh";
   } 
@@ -185,9 +194,10 @@ void fuzzification(int ultrasonikKiri, int ultrasonikDepan, int ultrasonikKanan)
 
   left  = DekatSedangJauh(fuzzy_kiri_dekat,  fuzzy_kiri_sedang,  fuzzy_kiri_jauh);
   front = DekatSedangJauh(fuzzy_depan_dekat, fuzzy_depan_sedang, fuzzy_depan_jauh);
-  right = DekatSedangJauh(fuzzy_kanan_jauh, fuzzy_kanan_sedang, fuzzy_kanan_dekat);
+  right = DekatSedangJauh(fuzzy_kanan_dekat, fuzzy_kanan_sedang, fuzzy_kanan_jauh);
   // Serial.println("Left : " + left + "  front : " + front + "  right : " + right);
-  // Serial.println(String(fuzzy_depan_dekat) + "  " + String(fuzzy_depan_sedang) + "  " + String(fuzzy_depan_jauh));
+  // Serial.print(String(fuzzy_depan_dekat) + "  " + String(fuzzy_depan_sedang) + "  " + String(fuzzy_depan_jauh) + " " + String(front));
+  Serial.print(String(fuzzy_kanan_jauh) + "  " + String(fuzzy_kanan_sedang) + "  " + String(fuzzy_kanan_dekat) + " " + String(right));
 }
 
 String ruleBase(String left, String front, String right)

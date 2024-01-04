@@ -121,10 +121,11 @@ void loop()
           rotasi(setpoint, baca_yaw);
           // collectDataRight += 1;
         }
-        // else
-        // {
-        //   collectDataStraight += 1;
-        // }
+        else
+        {
+          setpoint = setpoint;
+          // collectDataStraight += 1;
+        }
         // Serial.println(takeData);
         // gerak pid
         takeData = false;
@@ -143,9 +144,10 @@ void loop()
     
     // Serial.println(String(setpoint) + ";" + String(baca_yaw));
     // Serial.println(d_left);
-    Serial.print(setpoint);
-    Serial.print(F(","));
-    Serial.println(baca_yaw);
+    Serial.print(F("  "));
+    Serial.print(Kanan);
+    Serial.print(F("  "));
+    Serial.println(setpoint);
     // Serial.print("  ||  Z = ");
     // Serial.println(mpu.getAngleZ());
 

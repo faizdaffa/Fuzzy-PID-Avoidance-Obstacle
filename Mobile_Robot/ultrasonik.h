@@ -37,11 +37,11 @@ void read_ultrasonik()
 {
   delay(50);
 
-  KiriBelakang  = sonar[0].ping_cm(); // Send ping, get ping time in microseconds (uS).
-  KiriDepan     = sonar[1].ping_cm(); // Send ping, get ping time in microseconds (uS).
+  // KiriBelakang  = sonar[0].ping_cm(); // Send ping, get ping time in microseconds (uS).
+  Kiri     = sonar[1].ping_cm(); // Send ping, get ping time in microseconds (uS).
   Depan         = sonar[2].ping_cm(); // Send ping, get ping time in microseconds (uS).
-  KananDepan    = sonar[3].ping_cm(); // Send ping, get ping time in microseconds (uS).
-  KananBelakang = sonar[4].ping_cm(); // Send ping, get ping time in microseconds (uS).
+  Kanan    = sonar[3].ping_cm(); // Send ping, get ping time in microseconds (uS).
+  // KananBelakang = sonar[4].ping_cm(); // Send ping, get ping time in microseconds (uS).
 
   // Serial.print("KiriD: ");
   // Serial.print(KiriDepan);
@@ -54,8 +54,8 @@ void read_ultrasonik()
   // Serial.print("  KananB: ");
   // Serial.println(KananBelakang);
 
-  Kiri  = (KiriDepan  +  KiriBelakang) / 2;
-  Kanan = (KananDepan + KananBelakang) / 2;
+  // Kiri  = (KiriDepan  +  KiriBelakang) / 2;
+  // Kanan = (KananDepan + KananBelakang) / 2;
 }
 void manual_innit()
 { 
